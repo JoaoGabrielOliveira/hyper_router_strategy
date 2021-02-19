@@ -1,0 +1,13 @@
+{
+    "name": "hypercode/route_strategy",
+    "description": "Router interfaces to implements on router frameworks",
+    "type": "library",
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Hyper\\Strategy\\Router\\": ["src/"]
+        }
+    }
+}
