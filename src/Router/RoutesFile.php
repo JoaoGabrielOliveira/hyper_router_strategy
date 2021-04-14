@@ -6,26 +6,26 @@ use InvalidArgumentException;
 class RoutesFile
 {
     private Parsers\IRouteParser $parser;
-    private $content;
+    private $fileContent;
 
-    public function __construct(string $path, Parsers\IRouteParser $parser)
-    {
-        if (!file_exists($path))
-            throw new InvalidArgumentException("File do not exist!");
-        $this->content = file_get_contents($path);
+    public function __construct($fileContent, Parsers\IRouteParser $parser)
+    {   
+        $this->fileContent = $fileContent;
         $this->parser = $parser;
     }
 
     public function toArray()
     {
-        $decodeData = $this->parser->do($this->content);
+        $decodeData = $this->parser->do($this->fileContent);
 
         foreach($decodeData as $url => $route)
         {
-            if (!$this->arrayCanBeRoute($route))
-                $routes[] = $this->MakeGroupRoutes($route,$url);
-            else
+            if(is_a($route,Route::class))
+                $routes[] = $route;
+            else if ($this->ArrayCanBeRoute($route))
                 $routes[] = $this->MakeRoute($route,$url);
+            else
+                $routes[] = $this->MakeGroupRoutes($route,$url);
         }
 
         return $routes;
