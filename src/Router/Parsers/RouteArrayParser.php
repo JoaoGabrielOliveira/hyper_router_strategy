@@ -5,7 +5,7 @@ use Hyper\Strategy\Router\Parsers\IRouteParser;
 
 class RouteArrayParser implements IRouteParser
 {
-    public function do($data)
+    public function parse($data)
     {
         $routes = [];
         foreach($data as $route => $dataRoute)
