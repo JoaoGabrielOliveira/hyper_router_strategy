@@ -2,3 +2,4 @@
 /test/*
 /tmp/*
 /nbproject/*
+*.lock

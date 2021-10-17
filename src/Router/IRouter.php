@@ -1,7 +1,9 @@
 <?php
 namespace Hyper\Strategy\Router;
-interface AbstractRouter
+interface IRouter
 {
+    public function start():void;
+
     public function get(string $route, $controller):void;
     public function post(string $route, $controller):void;
     public function put(string $route, $controller):void;

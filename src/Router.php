@@ -1,57 +1,52 @@
 <?php
 namespace Hyper\Strategy;
-use Hyper\Strategy\Router\AbstractRouter;
+use Hyper\Strategy\Router\IRouter;
 use Hyper\Strategy\Router\Route;
 use Hyper\Strategy\Router\RoutesFile;
-use Hyper\Strategy\Router\Parsers\RouteJSONParser;
+use Hyper\Strategy\Router\Parsers\IRouteParser;
 
 class Router
 {
-    public $routes;
-    public function __construct(RoutesFile $routes)
+    public array $routes;
+    private IRouter $router;
+
+    public function __construct(IRouteParser $parser, IRouter $router)
     {
-        $parser = new RouteJSONParser;
         $file = new RoutesFile(__DIR__ . "\\config\\routes.json", $parser);
         $this->routes = $file->toArray();
+        $this->router = $router;
     }
 
-    public function constructRouter(AbstractRouter $router)
-    {
-        foreach($this->routes as $route)
-        {
-            if($route)
-            {
-                
-            }
-        }
+    public function start():void{
+        $this->router->start();
     }
 
-    public function makeGroup(array $routes, AbstractRouter $router)
+    public function makeGroup(array $routes):void
     {
         foreach($routes as $route)
         {
-            $this->makeRoute($route, $router);
+            $this->makeRoute($route);
         }
     }
 
-    public function makeRoute(Route $route, AbstractRouter $router, string $urlBase = "/")
+    public function makeRoute(Route $route, string $urlBase = "/"):void
     {
         switch($route->verb)
         {
             case "GET":
-                $router->get($urlBase . $router->route,$router->controller);
+                $this->router->get($urlBase . $route->path, $route->controller);
             break;
 
             case "POST":
-                $router->post($urlBase . $router->route,$router->controller);
+                $this->router->post($urlBase . $route->path, $route->controller);
             break;
 
             case "PUT":
-                $router->put($urlBase . $router->route,$router->controller);
+                $this->router->put($urlBase . $route->path, $route->controller);
             break;
 
             case "DELETE":
-                $router->delete($urlBase . $router->route,$router->controller);
+                $this->router->delete($urlBase . $route->path, $route->controller);
             break;
         }
     }

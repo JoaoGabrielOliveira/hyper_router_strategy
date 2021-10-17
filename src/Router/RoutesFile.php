@@ -14,10 +14,10 @@ class RoutesFile
         $this->parser = $parser;
     }
 
-    public function toArray()
+    public function toArray():array
     {
-        $decodeData = $this->parser->do($this->fileContent);
-
+        $decodeData = $this->parser->parse($this->fileContent);
+        $routes = array();
         foreach($decodeData as $url => $route)
         {
             if(is_a($route,Route::class))
@@ -36,14 +36,15 @@ class RoutesFile
         return key_exists("controller",$route);
     }
 
-    public function MakeRoute($route, $url_base = '/')
+    public function MakeRoute($route, $url_base = '/'):Route
     {
         if(!key_exists("verb",$route)) $route["verb"] = "GET";
         return new Route($route["verb"],$url_base,$route["controller"]);
     }
 
-    public function MakeGroupRoutes(array $routes, $url_base = '/')
+    public function MakeGroupRoutes(array $routes, $url_base = '/'):array
     {
+        $group_routes = array();
         foreach($routes as $arrayRoute)
             foreach($arrayRoute as $url => $route)
             {
